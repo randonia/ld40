@@ -35,6 +35,7 @@ class Belt extends GameObject {
     let dZ;
     while ((dZ = this._zones.shift())) {
       // Deprocess zone
+      dZ.destroy();
     }
     const playerLevel = player.level;
     // Build level * 2 + 2 zones
@@ -46,14 +47,12 @@ class Belt extends GameObject {
       const rX = currZoneIdx * rWidth;
       const rY = this.y;
       const rect = new Phaser.Rectangle(rX, rY, rWidth, rHeight);
-      this._zones.push({
+      this._zones.push(new Zone({
         rect,
-        color: {
-          r: parseInt(Math.random() * 255),
-          g: parseInt(Math.random() * 255),
-          b: parseInt(Math.random() * 255),
-        }
-      });
+        tier: this.tier,
+        idx: currZoneIdx,
+        level: playerLevel,
+      }));
     }
   }
   update(delta) {
@@ -79,6 +78,7 @@ class Belt extends GameObject {
     // Move the zones
     for (var zIdx = 0; zIdx < this._zones.length; zIdx++) {
       const zone = this._zones[zIdx]
+      zone.update();
       zone.rect.y = this.y;
       // If this zone already has one occupant, ignore all others
       if (zone.occupied && zone.occupant) {
@@ -105,14 +105,8 @@ class Belt extends GameObject {
     }
   }
   render() {
-    if (ENV.debug) {
-      for (var zoneIdx = 0; zoneIdx < this._zones.length; zoneIdx++) {
-        const zoneData = this._zones[zoneIdx];
-        const alpha = zoneData.occupied ? 0.75 : 0.25;
-        const cD = zoneData.color
-        const color = `rgba(${cD.r},${cD.g},${cD.b},${alpha})`;
-        game.debug.geom(zoneData.rect, color);
-      }
+    for (var zoneIdx = 0; zoneIdx < this._zones.length; zoneIdx++) {
+      this._zones[zoneIdx].render();
     }
   }
   connectSignals(signals) {

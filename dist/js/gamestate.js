@@ -7,6 +7,7 @@ class GameState {
   preload() {
     game.load.image('belt', 'assets/sprites/belt.png');
     game.load.image('player', 'assets/sprites/player.png');
+    game.load.spritesheet('letters', 'assets/sprites/letters.png', 32, 32, 24);
     game.load.spritesheet('sushi', 'assets/sprites/sushi_01.png', 75, 75, 3);
   }
   create() {
