@@ -80,7 +80,19 @@ class Belt extends GameObject {
     for (var zIdx = 0; zIdx < this._zones.length; zIdx++) {
       const zone = this._zones[zIdx]
       zone.rect.y = this.y;
-      // Test collision with items
+      // If this zone already has one occupant, ignore all others
+      if (zone.occupied && zone.occupant) {
+        // Test if the occupant is still here
+        if (zone.rect.intersects(zone.occupant.sprite.getBounds())) {
+          // We're still occupied, continue;
+          continue;
+        } else {
+          // Reset this zone and keep going
+          zone.occupied = false;
+          zone.occupant = undefined;
+        }
+      }
+      // Test collision with all the items
       for (var i = 0; i < this._items.length; i++) {
         const itemData = this._items[i];
         zone.occupied = zone.rect.intersects(itemData.item.sprite.getBounds());
