@@ -48,7 +48,11 @@ class Belt extends GameObject {
       const rect = new Phaser.Rectangle(rX, rY, rWidth, rHeight);
       this._zones.push({
         rect,
-        color: `rgba(${parseInt(Math.random() * 255)},${parseInt(Math.random() * 255)},${parseInt(Math.random() * 255)}, 0.5)`,
+        color: {
+          r: parseInt(Math.random() * 255),
+          g: parseInt(Math.random() * 255),
+          b: parseInt(Math.random() * 255),
+        }
       });
     }
   }
@@ -74,14 +78,28 @@ class Belt extends GameObject {
     }
     // Move the zones
     for (var zIdx = 0; zIdx < this._zones.length; zIdx++) {
-      this._zones[zIdx].rect.y = this.y;
+      const zone = this._zones[zIdx]
+      zone.rect.y = this.y;
+      // Test collision with items
+      for (var i = 0; i < this._items.length; i++) {
+        const itemData = this._items[i];
+        zone.occupied = zone.rect.intersects(itemData.item.sprite.getBounds());
+        if (zone.occupied) {
+          zone.occupant = itemData.item;
+        } else {
+          zone.occupant = undefined;
+        }
+      }
     }
   }
   render() {
     if (ENV.debug) {
       for (var zoneIdx = 0; zoneIdx < this._zones.length; zoneIdx++) {
         const zoneData = this._zones[zoneIdx];
-        game.debug.geom(zoneData.rect, zoneData.color);
+        const alpha = zoneData.occupied ? 0.75 : 0.25;
+        const cD = zoneData.color
+        const color = `rgba(${cD.r},${cD.g},${cD.b},${alpha})`;
+        game.debug.geom(zoneData.rect, color);
       }
     }
   }
