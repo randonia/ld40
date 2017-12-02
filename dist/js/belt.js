@@ -1,8 +1,8 @@
 var BELTSPEED = parseInt(ENV.BELTSPEED) || 50;
 class Belt extends GameObject {
   // Use -1 for left and 1 for right
-  set direction(value) {
-    this._direction = value;
+  get direction() {
+    return this._direction;
   }
   get speed() {
     return this._speed;
@@ -13,12 +13,45 @@ class Belt extends GameObject {
   set nextBelt(belt) {
     this._nextBelt = belt;
   }
-  constructor() {
+  get tier() {
+    return this._tier;
+  }
+  constructor(opts = {}) {
     super();
     this._items = [];
     this._speed = BELTSPEED; // px/second
-    this.direction = 1; // default rightward
+    this._tier = opts.tier;
+    this._direction = opts.direction || 0;
+    this._nextBelt = opts.nextBelt || undefined;
     this._sprite = game.add.tileSprite(this.x, this.y, 800, 100, 'belt');
+    this.generateZones();
+
+  }
+  generateZones() {
+    if (!this._zones) {
+      this._zones = [];
+    }
+    // destruct zones
+    let dZ;
+    while ((dZ = this._zones.shift())) {
+      // Deprocess zone
+      console.log('Destroying zone', dZ);
+    }
+    const playerLevel = player.level;
+    // Build level * 2 + 2 zones
+    const numToBuild = playerLevel * 2 + 2;
+    const width = this.sprite.width;
+    const rHeight = this.sprite.height;
+    const rWidth = width / numToBuild;
+    for (var currZoneIdx = 0; currZoneIdx < numToBuild; currZoneIdx++) {
+      const rX = currZoneIdx * rWidth;
+      const rY = this.y;
+      const rect = new Phaser.Rectangle(rX, rY, rWidth, rHeight);
+      this._zones.push({
+        rect,
+        color: `rgba(${parseInt(Math.random() * 255)},${parseInt(Math.random() * 255)},${parseInt(Math.random() * 255)}, 0.5)`,
+      });
+    }
   }
   update(delta) {
     super.update(delta);
@@ -39,6 +72,28 @@ class Belt extends GameObject {
       if (itemData.new) {
         itemData.new = false;
       }
+    }
+    // Move the zones
+    for (var zIdx = 0; zIdx < this._zones.length; zIdx++) {
+      this._zones[zIdx].rect.y = this.y;
+    }
+  }
+  render() {
+    if (ENV.debug) {
+      for (var zoneIdx = 0; zoneIdx < this._zones.length; zoneIdx++) {
+        const zoneData = this._zones[zoneIdx];
+        game.debug.geom(zoneData.rect, zoneData.color);
+      }
+    }
+  }
+  connectSignals(signals) {
+    if (signals.onArmKeyPress) {
+      signals.onArmKeyPress.add(this.onArmKeyPress, this);
+    }
+  }
+  disconnectSignals(signals) {
+    if (signals.onArmKeyPress) {
+      signals.onArmKeyPress.remove(this.onArmKeyPress, this);
     }
   }
   // add an item to this belt, starting at the beginning if pos is undefined
@@ -92,5 +147,11 @@ class Belt extends GameObject {
     }
     console.warn('This belt is misconfigured', this);
     return false;
+  }
+  onArmKeyPress(keyData) {
+    if (keyData.row !== this.tier) {
+      return;
+    }
+    console.log('BELT RECEIVING:', keyData);
   }
 }

@@ -22,4 +22,5 @@ class GameObject {
       this._sprite.position.set(this.x, this.y);
     }
   }
+  render() {}
 }

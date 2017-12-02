@@ -11,24 +11,35 @@ class GameState {
   }
   create() {
 
-    const player = new Player();
+    player = new Player();
     player.x = game.camera.bounds.centerX;
     player.y = game.camera.bounds.bottom;
     gameObjects.push(player);
 
-    const belt1 = new Belt();
+    const belt1 = new Belt({
+      direction: 1,
+      tier: 0,
+    });
     gameObjects.push(belt1);
 
-    const belt2 = new Belt();
+    const belt2 = new Belt({
+      direction: -1,
+      tier: 1,
+    });
     gameObjects.push(belt2);
-    belt2.direction = -1;
     belt2.y = belt1.y + belt1.sprite.height;
     belt1.nextBelt = belt2;
 
-    const belt3 = new Belt();
+    const belt3 = new Belt({
+      direction: 1,
+      tier: 2,
+    });
     gameObjects.push(belt3);
     belt3.y = belt2.y + belt2.sprite.height;
     belt2.nextBelt = belt3;
+
+    // Hook everyone up
+    [belt1, belt2, belt3].forEach(belt => belt.connectSignals(player.signals));
 
     const sushi1 = new Sushi();
     gameObjects.push(sushi1);
@@ -37,6 +48,11 @@ class GameState {
   update() {
     for (var i = 0; i < gameObjects.length; i++) {
       gameObjects[i].update(game.time.physicsElapsed);
+    }
+  }
+  render() {
+    for (var i = 0; i < gameObjects.length; i++) {
+      gameObjects[i].render();
     }
   }
 }
