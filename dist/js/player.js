@@ -19,6 +19,7 @@ class Player extends GameObject {
     // Set up key signals
     this._signals = {
       onArmKeyPress: new Phaser.Signal(),
+      onLevelChange: new Phaser.Signal(),
       keys: {}
     }
     for (var keyRowIdx = 0; keyRowIdx < KEYS.length; keyRowIdx++) {
@@ -51,8 +52,13 @@ class Player extends GameObject {
       console.log('Player at max level');
       return;
     }
+    const oldLevel = this._level;
     this._level += 1;
     // DO LEVEL UP STUFF? animate or some shit
+    this._signals.onLevelChange.dispatch({
+      oldLevel,
+      level: this.level,
+    });
   }
   onArmKeyPress(key) {
     const keyData = this._signals.keys[key.keyCode];

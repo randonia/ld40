@@ -90,10 +90,16 @@ class Belt extends GameObject {
     if (signals.onArmKeyPress) {
       signals.onArmKeyPress.add(this.onArmKeyPress, this);
     }
+    if (signals.onLevelChange) {
+      signals.onLevelChange.add(this.onPlayerLevelChange, this);
+    }
   }
   disconnectSignals(signals) {
     if (signals.onArmKeyPress) {
       signals.onArmKeyPress.remove(this.onArmKeyPress, this);
+    }
+    if (signals.onLevelChange) {
+      signals.onLevelChange.remove(this.onPlayerLevelChange, this);
     }
   }
   // add an item to this belt, starting at the beginning if pos is undefined
@@ -153,5 +159,8 @@ class Belt extends GameObject {
       return;
     }
     console.log('BELT RECEIVING:', keyData);
+  }
+  onPlayerLevelChange(deltaData) {
+    console.log('Player has changed level:', deltaData);
   }
 }
