@@ -38,6 +38,37 @@ class Player extends GameObject {
       }
     }
   }
+  connectSignals(signals) {
+    if (signals.onInputSuccess) {
+      signals.onInputSuccess.add(this.onInputSuccess, this);
+    }
+    if (signals.onInputFailure) {
+      signals.onInputFailure.add(this.onInputFailure, this);
+    }
+    if (signals.onInputMiss) {
+      signals.onInputMiss.add(this.onInputMiss, this);
+    }
+  }
+  disconnectSignals(signals) {
+    if (signals.onInputSuccess) {
+      signals.onInputSuccess.remove(this.onInputSuccess, this);
+    }
+    if (signals.onInputFailure) {
+      signals.onInputFailure.remove(this.onInputFailure, this);
+    }
+    if (signals.onInputMiss) {
+      signals.onInputMiss.remove(this.onInputMiss, this);
+    }
+  }
+  onInputSuccess(msg) {
+    console.log('Successful hit', msg);
+  }
+  onInputFailure(msg) {
+    console.log('Failed task', msg);
+  }
+  onInputMiss(msg) {
+    console.log('Tried to hit zone that is unoccupied', msg);
+  }
   /*
    * Levels go from 0->3
    * level 0 is R/U

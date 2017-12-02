@@ -39,8 +39,11 @@ class GameState {
     belt3.y = belt2.y + belt2.sprite.height;
     belt2.nextBelt = belt3;
 
-    // Hook everyone up
-    [belt1, belt2, belt3].forEach(belt => belt.connectSignals(player.signals));
+    // Hook up the belts and the player's signals
+    [belt1, belt2, belt3].forEach(belt => {
+      belt.connectSignals(player.signals);
+      player.connectSignals(belt.signals);
+    });
 
     const sushi1 = new Sushi();
     gameObjects.push(sushi1);

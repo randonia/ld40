@@ -16,6 +16,9 @@ class Belt extends GameObject {
   get tier() {
     return this._tier;
   }
+  get signals() {
+    return this._signals;
+  }
   constructor(opts = {}) {
     super();
     this._items = [];
@@ -25,7 +28,11 @@ class Belt extends GameObject {
     this._nextBelt = opts.nextBelt || undefined;
     this._sprite = game.add.tileSprite(this.x, this.y, 800, 100, 'belt');
     this.generateZones();
-
+    this._signals = {
+      onInputSuccess: new Phaser.Signal(),
+      onInputMiss: new Phaser.Signal(),
+      onInputFailure: new Phaser.Signal(),
+    };
   }
   generateZones() {
     if (!this._zones) {
@@ -178,10 +185,31 @@ class Belt extends GameObject {
     return false;
   }
   onArmKeyPress(keyData) {
+    // Ignore if this isn't even the right tier
     if (keyData.row !== this.tier) {
       return;
     }
-    console.log('BELT RECEIVING:', keyData);
+    // See if there is a zone on this tier that matches this key
+    for (var zIdx = 0; zIdx < this._zones.length; zIdx++) {
+      const zone = this._zones[zIdx];
+      // Identify them by KeyCode
+      if (zone.keyCode === keyData.code) {
+        // This zone is relevant!
+        if (zone.occupied && zone.occupant) {
+          // Process it if it's occupied
+          // Stub for randomization of success/failure
+          if (Math.random() < 0.5) {
+            // Do win or lose condition
+            this._signals.onInputSuccess.dispatch({});
+          } else {
+            // Do win or lose condition
+            this._signals.onInputFailure.dispatch({});
+          }
+        } else {
+          this._signals.onInputMiss.dispatch({});
+        }
+      }
+    }
   }
   onPlayerLevelChange(deltaData) {
     this.generateZones();
