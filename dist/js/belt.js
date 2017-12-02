@@ -35,7 +35,6 @@ class Belt extends GameObject {
     let dZ;
     while ((dZ = this._zones.shift())) {
       // Deprocess zone
-      console.log('Destroying zone', dZ);
     }
     const playerLevel = player.level;
     // Build level * 2 + 2 zones
@@ -161,6 +160,6 @@ class Belt extends GameObject {
     console.log('BELT RECEIVING:', keyData);
   }
   onPlayerLevelChange(deltaData) {
-    console.log('Player has changed level:', deltaData);
+    this.generateZones();
   }
 }

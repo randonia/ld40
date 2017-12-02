@@ -60,6 +60,14 @@ class Player extends GameObject {
       level: this.level,
     });
   }
+  removeLevel() {
+    const oldLevel = this._level;
+    this._level = Math.max(0, oldLevel - 1);
+    this._signals.onLevelChange.dispatch({
+      oldLevel,
+      level: this.level,
+    });
+  }
   onArmKeyPress(key) {
     const keyData = this._signals.keys[key.keyCode];
     this._signals.onArmKeyPress.dispatch(keyData);
