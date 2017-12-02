@@ -10,6 +10,18 @@ class GameState {
   create() {
     const belt1 = new Belt();
     gameObjects.push(belt1);
+
+    const belt2 = new Belt();
+    gameObjects.push(belt2);
+    belt2.direction = -1;
+    belt2.y = belt1.y + belt1.sprite.height;
+    belt1.nextBelt = belt2;
+
+    const belt3 = new Belt();
+    gameObjects.push(belt3);
+    belt3.y = belt2.y + belt2.sprite.height;
+    belt2.nextBelt = belt3;
+
     const sushi1 = new Sushi();
     gameObjects.push(sushi1);
     belt1.addItem(sushi1);
