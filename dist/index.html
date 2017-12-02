@@ -5,6 +5,12 @@
   <link rel="stylesheet" href="style.css" type="text/css"></link>
   <meta charset="utf-8" />
   <script type="text/javascript">
+    // Parse out all the debug parameters and use it to define ENV variables
+    var ENV = window.location.search.substr(1).split('&').map(item => item.split('=')).reduce((acc, val) => {
+      acc[val[0]] = val[1];
+      return acc
+    }, {});
+
     // A slightly more civilized include
     const scripts = [
       'thirdparty/sprintf',
