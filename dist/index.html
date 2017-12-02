@@ -7,17 +7,18 @@
   <script type="text/javascript">
     // A slightly more civilized include
     const scripts = [
-      'js/thirdparty/sprintf.js',
-      'js/thirdparty/phaser.js',
-      'js/gamestate.js',
-      'js/gameobject.js',
-      'js/belt.js',
-      'js/game.js',
+      'thirdparty/sprintf',
+      'thirdparty/phaser',
+      'gamestate',
+      'gameobject',
+      'belt',
+      'sushi',
+      'game',
     ];
 
     for (var i = 0; i < scripts.length; i++) {
       const script = document.createElement('script');
-      script.src = scripts[i];
+      script.src = `js/${scripts[i]}.js`;
       document.head.appendChild(script);
     }
   </script>
