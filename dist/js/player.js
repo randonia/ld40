@@ -50,13 +50,13 @@ class Player extends GameObject {
     }
     // Make all 8 arms upfront
     const armPositions = [
-      new Phaser.Point(266, 351), // 3
-      new Phaser.Point(526, 355), // 4
-      new Phaser.Point(183, 355), // 2
+      new Phaser.Point(264, 351), // 3
+      new Phaser.Point(526, 357), // 4
+      new Phaser.Point(181, 355), // 2
       new Phaser.Point(619, 349), // 5
       new Phaser.Point(98, 346), // 1
       new Phaser.Point(681, 348), // 6
-      new Phaser.Point(53, 356), // 0
+      new Phaser.Point(51, 356), // 0
       new Phaser.Point(749, 344), // 7
     ];
     this._arms = [];
@@ -69,6 +69,7 @@ class Player extends GameObject {
         targetX: offsetX + armPositions[i].x,
         targetY: offsetY + armPositions[i].y - 200,
         active: false,
+        idx: i,
       }));
     }
     this.checkLevel();
@@ -82,6 +83,15 @@ class Player extends GameObject {
       }
       arm.update();
       game.world.bringToTop(this._arms[i]._noodle);
+    }
+  }
+  render() {
+    super.render();
+    if (ENV.debug) {
+      for (var armIdx = 0; armIdx < this._arms.length; armIdx++) {
+        const arm = this._arms[armIdx];
+        game.debug.text(`[${arm._index}]`, arm.x - 10, arm.y - 25);
+      }
     }
   }
   connectSignals(signals) {

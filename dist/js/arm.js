@@ -14,9 +14,16 @@ class Arm {
   get ready() {
     return this.active && !this._target;
   }
+  get x() {
+    return this._points[0].x;
+  }
+  get y() {
+    return this._points[0].y;
+  }
   constructor(opts) {
     this._x = opts.startX;
     this._y = opts.startY;
+    this._index = opts.idx;
 
     // Just use two points for now
     this._targetX = opts.targetX;
