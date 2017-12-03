@@ -201,8 +201,6 @@ class Player extends GameObject {
     // Set up the arms based on your level
     const armIdx = Math.min(this._level, 3); // safeguard against going too hard
     for (var i = 0; i < this._arms.length; i++) {
-      console.log('ARM TEST:', (i < (armIdx + 1) * 2));
-      console.log('ARM TEST VALS:', `${i} < (${armIdx} + ${1}) * ${2}`);
       this._arms[i].active = i < (armIdx + 1) * 2;
       game.world.bringToTop(this._arms[i]._noodle);
     }

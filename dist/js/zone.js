@@ -74,12 +74,12 @@ class Zone extends GameObject {
   update() {
     // Intentionally do not update the sprite using regular GameObject#update
     this._sprite.position.set(this._rect.centerX, this._rect.centerY - this._sprite.height);
-    const occupied = this.occupied && this.occupant;
+    const showKeySprite = this.occupied && this.occupant && !this.occupant.grabbed;
     if (ENV.debug) {
       // For debugging just tint it disabled looking
-      this._sprite.tint = (occupied) ? 0xFFFFFF : 0xFF3333;
+      this._sprite.tint = (showKeySprite) ? 0xFFFFFF : 0xFF3333;
     } else {
-      this._sprite.visible = occupied;
+      this._sprite.visible = showKeySprite;
     }
   }
   render() {
