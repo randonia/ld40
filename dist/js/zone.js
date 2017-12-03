@@ -83,7 +83,7 @@ class Zone extends GameObject {
   }
   render() {
     if (ENV.debug) {
-      const alpha = this.occupied ? 0.75 : 0.25;
+      const alpha = this.occupied ? 0.55 : 0.125;
       const cD = this.color
       const color = `rgba(${cD.r},${cD.g},${cD.b},${alpha})`;
       game.debug.geom(this.rect, color);

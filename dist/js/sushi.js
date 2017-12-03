@@ -20,7 +20,7 @@ class Sushi extends FoodItem {
           setTimeout(() => {
             this._sprite.frame = 1;
             accept({ result: ACTION_RESULTS.SUCCESS })
-          }, 1500);
+          }, (ENV.debug) ? 150 : 1500);
         });
       },
       completeFn: () => {
@@ -36,7 +36,7 @@ class Sushi extends FoodItem {
           setTimeout(() => {
             this._sprite.frame = 2;
             accept({ result: ACTION_RESULTS.SUCCESS })
-          }, 1500);
+          }, (ENV.debug) ? 150 : 1500);
         });
       },
       completeFn: () => {
@@ -51,11 +51,26 @@ class Sushi extends FoodItem {
         return Promise.resolve({ result: ACTION_RESULTS.SUCCESS });
       },
       completeFn: () => {
-        console.log('Give it a plate or something');
+        this._sprite.frame = 3;
         this.nextStep();
       }
     }),
     ];
+  }
+  update(delta) {
+    super.update();
+    if (this._emitter) {
+      this._emitter.x = this.x;
+      this._emitter.y = this.sprite.bottom;
+    }
+  }
+  doComplete() {
+    // Just tween somewhere spinning I guess and maybe add some sparkes
+    const emitter = game.add.emitter(this.x, this.y, 100);
+    emitter.makeParticles('effects', [0,1,2,3]);
+    emitter.start(false, 2000, 15);
+    this._emitter = emitter;
+    this._tween = game.add.tween(this).to( { _x: Math.random() * game.world.width, _y: -200 }, 3500, Phaser.Easing.Cubic.Out, true);
   }
   handleAction(callback) {
     this._steps[this._step].doAction(callback);
