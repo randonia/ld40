@@ -48,6 +48,9 @@ class Player extends GameObject {
     if (signals.onInputMiss) {
       signals.onInputMiss.add(this.onInputMiss, this);
     }
+    if (signals.onItemComplete) {
+      signals.onItemComplete.add(this.onItemComplete, this);
+    }
   }
   disconnectSignals(signals) {
     if (signals.onInputSuccess) {
@@ -59,6 +62,9 @@ class Player extends GameObject {
     if (signals.onInputMiss) {
       signals.onInputMiss.remove(this.onInputMiss, this);
     }
+    if (signals.onItemComplete) {
+      signals.onItemComplete.remove(this.onItemComplete, this);
+    }
   }
   onInputSuccess(msg) {
     console.log('Successful hit', msg);
@@ -68,6 +74,9 @@ class Player extends GameObject {
   }
   onInputMiss(msg) {
     console.log('Tried to hit zone that is unoccupied', msg);
+  }
+  onItemComplete(item) {
+    console.log('The player reporting the item is complete:', item);
   }
   /*
    * Levels go from 0->3

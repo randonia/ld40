@@ -19,6 +19,13 @@ var ZONE_TIERS = [
     [Phaser.KeyCode.Z, Phaser.KeyCode.X, Phaser.KeyCode.C, Phaser.KeyCode.V, Phaser.KeyCode.N, Phaser.KeyCode.M, Phaser.KeyCode.COMMA, Phaser.KeyCode.PERIOD],
   ],
 ]
+// Message flags
+const ACTION_RESULTS = {
+  SUCCESS: 0x0001,
+  FAILURE: 0x0002,
+  MISS: 0x0004,
+  PENDING: 0x0008,
+};
 class Zone extends GameObject {
   // Given _tier and _idx, return a sprite index
   get spriteIndex() {
@@ -54,6 +61,14 @@ class Zone extends GameObject {
       g: parseInt(Math.random() * 255),
       b: parseInt(Math.random() * 255),
     };
+  }
+  // Pass in a function callback that accepts an ACTION_RESULTS value
+  handleAction(callback) {
+    if (this.occupied && this.occupant) {
+      this.occupant.handleAction(callback);
+    } else {
+      callback(ACTION_RESULTS.MISS);
+    }
   }
   update() {
     // Intentionally do not update the sprite using regular GameObject#update

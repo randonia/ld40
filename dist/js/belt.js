@@ -32,6 +32,7 @@ class Belt extends GameObject {
       onInputSuccess: new Phaser.Signal(),
       onInputMiss: new Phaser.Signal(),
       onInputFailure: new Phaser.Signal(),
+      onItemComplete: new Phaser.Signal(),
     };
   }
   generateZones() {
@@ -123,6 +124,9 @@ class Belt extends GameObject {
     if (signals.onLevelChange) {
       signals.onLevelChange.add(this.onPlayerLevelChange, this);
     }
+    if (signals.onItemComplete) {
+      signals.onItemComplete.add(this.onItemComplete, this);
+    }
   }
   disconnectSignals(signals) {
     if (signals.onArmKeyPress) {
@@ -131,9 +135,13 @@ class Belt extends GameObject {
     if (signals.onLevelChange) {
       signals.onLevelChange.remove(this.onPlayerLevelChange, this);
     }
+    if (signals.onItemComplete) {
+      signals.onItemComplete.remove(this.onItemComplete, this);
+    }
   }
-  // add an item to this belt, starting at the beginning if pos is undefined
-  addItem(item, pos = Phaser.Point(0, 0)) {
+  // add an item to this belt
+  addItem(item) {
+    this.connectSignals(item.signals);
     for (var i = 0; i < this._items.length; i++) {
       if (this._items[i].item === item) {
         console.log('Item already exists in list, aborting', this, item);
@@ -157,6 +165,7 @@ class Belt extends GameObject {
     itemData.item.y = this.sprite.bottom - itemData.item.sprite.height;
   }
   removeItem(item) {
+    this.disconnectSignals(item.signals);
     let index = NaN;
     for (var i = 0; i < this._items.length; i++) {
       if (this._items[i].item === item) {
@@ -174,6 +183,16 @@ class Belt extends GameObject {
       console.log('The item has nowhere to go!');
     }
   }
+  onItemComplete(item) {
+    console.warn('Item has been completed:', item);
+    // Do some cleanup
+    this.disconnectSignals(item.signals);
+    // Execute the item's completion
+    item.doComplete();
+    // Score it?
+    // Notify the player of success
+    this._signals.onItemComplete.dispatch(item);
+  }
   itemIsOnBelt(item) {
     // Test belt right edge vs item left edge if right
     if (this._direction === 1) {
@@ -184,6 +203,7 @@ class Belt extends GameObject {
     console.warn('This belt is misconfigured', this);
     return false;
   }
+  // Note that this happens asynchronously and must be guarded against in the lower levels
   onArmKeyPress(keyData) {
     // Ignore if this isn't even the right tier
     if (keyData.row !== this.tier) {
@@ -194,20 +214,24 @@ class Belt extends GameObject {
       const zone = this._zones[zIdx];
       // Identify them by KeyCode
       if (zone.keyCode === keyData.code) {
-        // This zone is relevant!
-        if (zone.occupied && zone.occupant) {
-          // Process it if it's occupied
-          // Stub for randomization of success/failure
-          if (Math.random() < 0.5) {
-            // Do win or lose condition
-            this._signals.onInputSuccess.dispatch({});
-          } else {
-            // Do win or lose condition
-            this._signals.onInputFailure.dispatch({});
+        zone.handleAction((result) => {
+          switch (result) {
+            case ACTION_RESULTS.SUCCESS:
+              this._signals.onInputSuccess.dispatch({});
+              break;
+            case ACTION_RESULTS.FAILURE:
+              this._signals.onInputFailure.dispatch({});
+              break;
+            case ACTION_RESULTS.MISS:
+              this._signals.onInputMiss.dispatch({});
+              break;
+            case ACTION_RESULTS.PENDING:
+              // do nothing since we're waiting
+              break;
+            default:
+              console.warn('Unexpected result occurred: ', result);
           }
-        } else {
-          this._signals.onInputMiss.dispatch({});
-        }
+        });
       }
     }
   }
