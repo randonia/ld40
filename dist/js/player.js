@@ -42,6 +42,41 @@ class Player extends GameObject {
         };
       }
     }
+    // Make all 8 arms upfront
+    const armPositions = [
+      new Phaser.Point(300, game.world.height),
+      new Phaser.Point(400, game.world.height),
+      new Phaser.Point(200, game.world.height),
+      new Phaser.Point(500, game.world.height),
+      new Phaser.Point(100, game.world.height),
+      new Phaser.Point(600, game.world.height),
+      new Phaser.Point(0, game.world.height),
+      new Phaser.Point(700, game.world.height),
+    ];
+    this._arms = [];
+    for (var i = 0; i < 8; i++) {
+      this._arms.push(new Arm({
+        startX: armPositions[i].x,
+        startY: armPositions[i].y,
+        targetX: armPositions[i].x,
+        targetY: armPositions[i].y - 150,
+        active: false,
+      }));
+    }
+    this.checkLevel();
+  }
+  update() {
+    super.update();
+    for (var i = 0; i < this._arms.length; i++) {
+      const arm = this._arms[i];
+      if (!arm.active) {
+        continue;
+      }
+      arm.targetX = game.input.mousePointer.position.x;
+      arm.targetY = game.input.mousePointer.position.y;
+      arm.update();
+      game.world.bringToTop(this._arms[i]._noodle);
+    }
   }
   connectSignals(signals) {
     if (signals.onInputSuccess) {
@@ -130,13 +165,22 @@ class Player extends GameObject {
    * subsequent levels just add challenges?
    */
   setLevel(newLevel) {
-    const oldLevel = this._level;
-    this._level = newLevel;
+    const oldLevel = this._level
+    // Do not let anyone go above level 3;
+    this._level = Math.max(0, Math.min(MAX_LEVEL, newLevel));
     if (oldLevel !== newLevel) {
       this._signals.onLevelChange.dispatch({
         oldLevel,
         level: this.level,
       });
+    }
+    // Set up the arms based on your level
+    const armIdx = Math.min(this._level, 3); // safeguard against going too hard
+    for (var i = 0; i < this._arms.length; i++) {
+      console.log('ARM TEST:', (i < (armIdx + 1) * 2));
+      console.log('ARM TEST VALS:', `${i} < (${armIdx} + ${1}) * ${2}`);
+      this._arms[i].active = i < (armIdx + 1) * 2;
+      game.world.bringToTop(this._arms[i]._noodle);
     }
   }
   addLevel() {
@@ -147,8 +191,8 @@ class Player extends GameObject {
     }
     const oldLevel = this._level;
     this._level += 1;
-
     this._signals.onLevelChange.dispatch({
+
       oldLevel,
       level: this.level,
     });

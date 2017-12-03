@@ -13,6 +13,7 @@ class UIManager {
         this.tryHook(hookId);
       }
     });
+    game.world.bringToTop(this._group);
   }
   render() {
     game.world.bringToTop(this._group);
