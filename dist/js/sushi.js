@@ -11,50 +11,56 @@ class Sushi extends FoodItem {
   }
   generateSteps() {
     return [
-    // Step 1: Cut
-    new Step({
-      scope: this,
-      actionFn: () => {
-        console.log('Starting Cut action for sushi');
-        return new Promise((accept) => {
-          setTimeout(() => {
-            this._sprite.frame = 1;
-            accept({ result: ACTION_RESULTS.SUCCESS })
-          }, (ENV.debug) ? 150 : 1500);
-        });
-      },
-      completeFn: () => {
-        this.nextStep();
-      },
-    }),
-    // Step 2: Slice
-    new Step({
-      scope: this,
-      actionFn: () => {
-        console.log('Starting slice action for sushi');
-        return new Promise((accept) => {
-          setTimeout(() => {
-            this._sprite.frame = 2;
-            accept({ result: ACTION_RESULTS.SUCCESS })
-          }, (ENV.debug) ? 150 : 1500);
-        });
-      },
-      completeFn: () => {
-        this.nextStep();
-      },
-    }),
-    // Step 3: Plate
-    new Step({
-      scope: this,
-      actionFn: () => {
-        console.log('Simple just add plate');
-        return Promise.resolve({ result: ACTION_RESULTS.SUCCESS });
-      },
-      completeFn: () => {
-        this._sprite.frame = 3;
-        this.nextStep();
-      }
-    }),
+      // Step 1: Cut
+      new Step({
+        scope: this,
+        actionFn: () => {
+          console.log('Starting Cut action for sushi');
+          return new Promise((accept) => {
+            setTimeout(() => {
+              this._sprite.frame = 1;
+              accept({
+                result: ACTION_RESULTS.SUCCESS
+              })
+            }, (ENV.debug) ? 150 : 1500);
+          });
+        },
+        completeFn: () => {
+          this.nextStep();
+        },
+      }),
+      // Step 2: Slice
+      new Step({
+        scope: this,
+        actionFn: () => {
+          console.log('Starting slice action for sushi');
+          return new Promise((accept) => {
+            setTimeout(() => {
+              this._sprite.frame = 2;
+              accept({
+                result: ACTION_RESULTS.SUCCESS
+              })
+            }, (ENV.debug) ? 150 : 1500);
+          });
+        },
+        completeFn: () => {
+          this.nextStep();
+        },
+      }),
+      // Step 3: Plate
+      new Step({
+        scope: this,
+        actionFn: () => {
+          console.log('Simple just add plate');
+          return Promise.resolve({
+            result: ACTION_RESULTS.SUCCESS
+          });
+        },
+        completeFn: () => {
+          this._sprite.frame = 3;
+          this.nextStep();
+        }
+      }),
     ];
   }
   update(delta) {
@@ -67,10 +73,13 @@ class Sushi extends FoodItem {
   doComplete() {
     // Just tween somewhere spinning I guess and maybe add some sparkes
     const emitter = game.add.emitter(this.x, this.y, 100);
-    emitter.makeParticles('effects', [0,1,2,3]);
+    emitter.makeParticles('effects', [0, 1, 2, 3]);
     emitter.start(false, 2000, 15);
     this._emitter = emitter;
-    this._tween = game.add.tween(this).to( { _x: Math.random() * game.world.width, _y: -200 }, 3500, Phaser.Easing.Cubic.Out, true);
+    this._tween = game.add.tween(this).to({
+      _x: Math.random() * game.world.width,
+      _y: -200
+    }, 3500, Phaser.Easing.Cubic.Out, true);
   }
   handleAction(callback) {
     this._steps[this._step].doAction(callback);
