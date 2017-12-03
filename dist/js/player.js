@@ -3,6 +3,9 @@ class Player extends GameObject {
   get level() {
     return this._level;
   }
+  get combo() {
+    return this._combo;
+  }
   get signals() {
     return this._signals;
   }
@@ -14,12 +17,14 @@ class Player extends GameObject {
     this._sprite.anchor.y = 1;
     this.initialize();
     this._level = 0; // leveling - see level fn
+    this._combo = 0;
   }
   initialize() {
     // Set up key signals
     this._signals = {
       onArmKeyPress: new Phaser.Signal(),
       onLevelChange: new Phaser.Signal(),
+      onComboChange: new Phaser.Signal(),
       keys: {}
     }
     for (var keyRowIdx = 0; keyRowIdx < KEYS.length; keyRowIdx++) {
@@ -71,12 +76,50 @@ class Player extends GameObject {
   }
   onInputFailure(msg) {
     console.log('Failed task', msg);
+    this.loseCombo();
   }
   onInputMiss(msg) {
     console.log('Tried to hit zone that is unoccupied', msg);
+    this.loseCombo();
   }
   onItemComplete(item) {
     console.log('The player reporting the item is complete:', item);
+    this.addCombo();
+    // see what level you're on via combo
+    this.checkLevel();
+  }
+  addCombo() {
+    const oldCombo = this._combo;
+    this._combo += 1;
+    this._signals.onComboChange.dispatch({
+      oldCombo,
+      combo: this._combo,
+    });
+  }
+  loseCombo() {
+    const oldCombo = this._combo;
+    this._combo = 0
+    this._signals.onComboChange.dispatch({
+      oldCombo,
+      combo: this._combo,
+    });
+  }
+  /**
+   * level 0 is combo 0-3
+   * level 1 is combo 3-6
+   * level 2 is combo 6-12
+   * level 3 is combo 12+
+   **/
+  checkLevel() {
+    if (this._combo >= 12) {
+      this.setLevel(3);
+    } else if (this._combo >= 6) {
+      this.setLevel(2);
+    } else if (this._combo >= 3) {
+      this.setLevel(1);
+    } else {
+      this.setLevel(0);
+    }
   }
   /*
    * Levels go from 0->3
@@ -86,6 +129,16 @@ class Player extends GameObject {
    * level 3 is QWER/UIOP
    * subsequent levels just add challenges?
    */
+  setLevel(newLevel) {
+    const oldLevel = this._level;
+    this._level = newLevel;
+    if (oldLevel !== newLevel) {
+      this._signals.onLevelChange.dispatch({
+        oldLevel,
+        level: this.level,
+      });
+    }
+  }
   addLevel() {
     // MAX LEVEL
     if (this._level >= MAX_LEVEL) {
@@ -94,7 +147,7 @@ class Player extends GameObject {
     }
     const oldLevel = this._level;
     this._level += 1;
-    // DO LEVEL UP STUFF? animate or some shit
+
     this._signals.onLevelChange.dispatch({
       oldLevel,
       level: this.level,
@@ -103,6 +156,7 @@ class Player extends GameObject {
   removeLevel() {
     const oldLevel = this._level;
     this._level = Math.max(0, oldLevel - 1);
+
     this._signals.onLevelChange.dispatch({
       oldLevel,
       level: this.level,

@@ -1,5 +1,6 @@
 var gameObjects = [];
 var player;
+var ui;
 /**
  * Default state
  **/
@@ -12,6 +13,7 @@ class GameState {
     game.load.spritesheet('effects', 'assets/sprites/effects.png', 16, 16, 4);
   }
   create() {
+    ui = new UIManager();
     player = new Player();
     player.x = game.camera.bounds.centerX;
     player.y = game.camera.bounds.bottom;
@@ -53,10 +55,12 @@ class GameState {
     for (var i = 0; i < gameObjects.length; i++) {
       gameObjects[i].update(game.time.physicsElapsed);
     }
+    ui.update();
   }
   render() {
     for (var i = 0; i < gameObjects.length; i++) {
       gameObjects[i].render();
     }
+    ui.render();
   }
 }
