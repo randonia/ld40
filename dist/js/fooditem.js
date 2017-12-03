@@ -32,10 +32,10 @@ class Step {
     this._completeFn = opts.completeFn; // Handles anything else
     this._ready = true;
   }
-  doAction(callback) {
+  doAction(completionFn) {
     if (!this._ready) {
       console.log('Cannot do this action: not ready', this);
-      callback(ACTION_RESULTS.PENDING);
+      completionFn(ACTION_RESULTS.PENDING);
       return;
     }
     this._ready = false;
@@ -43,7 +43,7 @@ class Step {
       result
     }) => {
       console.log('inner promise starting and completed', result);
-      callback(result);
+      completionFn(result);
       this._complete = true;
       this._completeFn();
     });

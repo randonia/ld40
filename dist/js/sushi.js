@@ -7,6 +7,7 @@ class Sushi extends FoodItem {
     this._step = 0;
     this._signals = {
       onItemComplete: new Phaser.Signal(),
+      onStepComplete: new Phaser.Signal(),
     };
   }
   generateSteps() {
@@ -18,7 +19,6 @@ class Sushi extends FoodItem {
           console.log('Starting Cut action for sushi');
           return new Promise((accept) => {
             setTimeout(() => {
-              this._sprite.frame = 1;
               accept({
                 result: ACTION_RESULTS.SUCCESS
               })
@@ -26,6 +26,7 @@ class Sushi extends FoodItem {
           });
         },
         completeFn: () => {
+          this._sprite.frame = 1;
           this.nextStep();
         },
       }),
@@ -36,7 +37,6 @@ class Sushi extends FoodItem {
           console.log('Starting slice action for sushi');
           return new Promise((accept) => {
             setTimeout(() => {
-              this._sprite.frame = 2;
               accept({
                 result: ACTION_RESULTS.SUCCESS
               })
@@ -44,6 +44,7 @@ class Sushi extends FoodItem {
           });
         },
         completeFn: () => {
+          this._sprite.frame = 2;
           this.nextStep();
         },
       }),
@@ -52,9 +53,13 @@ class Sushi extends FoodItem {
         scope: this,
         actionFn: () => {
           console.log('Simple just add plate');
-          return Promise.resolve({
-            result: ACTION_RESULTS.SUCCESS
-          });
+          return new Promise((accept) => {
+            setTimeout(() => {
+              accept({
+                result: ACTION_RESULTS.SUCCESS
+              });
+            }, 700);
+          })
         },
         completeFn: () => {
           this._sprite.frame = 3;
@@ -98,12 +103,17 @@ class Sushi extends FoodItem {
       step.destroy();
     }
   }
-  handleAction(callback) {
+  handleAction(completionFn) {
+    if (this.grabbed) {
+      return;
+    }
+    this.grabbed = true;
     if (this._step < this._steps.length) {
-      this._steps[this._step].doAction(callback);
+      this._steps[this._step].doAction(completionFn);
     }
   }
   nextStep() {
+    this._signals.onStepComplete.dispatch(this);
     this._step++;
     if (this._step === this._steps.length) {
       // we've completed all the steps!
@@ -112,6 +122,7 @@ class Sushi extends FoodItem {
       this._signals.onItemComplete.dispatch(this);
       return;
     } else {
+      this.grabbed = false;
       console.log('new step is:', this._step);
     }
     if (this._step >= this._steps.length) {

@@ -33,6 +33,7 @@ class Belt extends GameObject {
       onInputMiss: new Phaser.Signal(),
       onInputFailure: new Phaser.Signal(),
       onItemComplete: new Phaser.Signal(),
+      onItemSelected: new Phaser.Signal(),
     };
   }
   generateZones() {
@@ -218,24 +219,34 @@ class Belt extends GameObject {
       const zone = this._zones[zIdx];
       // Identify them by KeyCode
       if (zone.keyCode === keyData.code) {
-        zone.handleAction((result) => {
-          switch (result) {
-            case ACTION_RESULTS.SUCCESS:
-              this._signals.onInputSuccess.dispatch({});
-              break;
-            case ACTION_RESULTS.FAILURE:
-              this._signals.onInputFailure.dispatch({});
-              break;
-            case ACTION_RESULTS.MISS:
-              this._signals.onInputMiss.dispatch({});
-              break;
-            case ACTION_RESULTS.PENDING:
-              // do nothing since we're waiting
-              break;
-            default:
-              console.warn('Unexpected result occurred: ', result);
+        zone.handleAction(
+          // Complete callback first
+          (result) => {
+            switch (result) {
+              case ACTION_RESULTS.SUCCESS:
+                this._signals.onInputSuccess.dispatch({});
+                break;
+              case ACTION_RESULTS.FAILURE:
+                this._signals.onInputFailure.dispatch({});
+                break;
+              case ACTION_RESULTS.MISS:
+                this._signals.onInputMiss.dispatch({});
+                break;
+              case ACTION_RESULTS.PENDING:
+                // do nothing since we're waiting
+                break;
+              default:
+                console.warn('Unexpected result occurred: ', result);
+            }
+          },
+          //
+          (item) => {
+            this._signals.onItemSelected.dispatch({
+              freeArmIdx: keyData.freeArmIdx,
+              item,
+            });
           }
-        });
+        );
       }
     }
   }

@@ -72,8 +72,6 @@ class Player extends GameObject {
       if (!arm.active) {
         continue;
       }
-      arm.targetX = game.input.mousePointer.position.x;
-      arm.targetY = game.input.mousePointer.position.y;
       arm.update();
       game.world.bringToTop(this._arms[i]._noodle);
     }
@@ -91,6 +89,9 @@ class Player extends GameObject {
     if (signals.onItemComplete) {
       signals.onItemComplete.add(this.onItemComplete, this);
     }
+    if (signals.onItemSelected) {
+      signals.onItemSelected.add(this.onItemSelected, this);
+    }
   }
   disconnectSignals(signals) {
     if (signals.onInputSuccess) {
@@ -104,6 +105,9 @@ class Player extends GameObject {
     }
     if (signals.onItemComplete) {
       signals.onItemComplete.remove(this.onItemComplete, this);
+    }
+    if (signals.onItemSelected) {
+      signals.onItemSelected.remove(this.onItemSelected, this);
     }
   }
   onInputSuccess(msg) {
@@ -122,6 +126,15 @@ class Player extends GameObject {
     this.addCombo();
     // see what level you're on via combo
     this.checkLevel();
+  }
+  onItemSelected(payload) {
+    console.log('Player is selecting an item!', payload);
+    const {
+      freeArmIdx,
+      item
+    } = payload;
+
+    this._arms[freeArmIdx].setTarget(item);
   }
   addCombo() {
     const oldCombo = this._combo;
@@ -207,7 +220,22 @@ class Player extends GameObject {
     });
   }
   onArmKeyPress(key) {
-    const keyData = this._signals.keys[key.keyCode];
-    this._signals.onArmKeyPress.dispatch(keyData);
+    // Make sure we have an available arm
+    let freeArmIdx = undefined;
+    for (var armIdx = 0; armIdx < this._arms.length; armIdx++) {
+      const arm = this._arms[armIdx];
+      if (arm.active && arm.ready) {
+        freeArmIdx = armIdx
+        break;
+      }
+    }
+    if (freeArmIdx !== undefined) {
+      const keyData = this._signals.keys[key.keyCode];
+      this._signals.onArmKeyPress.dispatch(Object.assign({}, keyData, {
+        freeArmIdx
+      }));
+    } else {
+      console.log('No free arms! Oh noes');
+    }
   }
 }

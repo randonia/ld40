@@ -63,11 +63,12 @@ class Zone extends GameObject {
     };
   }
   // Pass in a function callback that accepts an ACTION_RESULTS value
-  handleAction(callback) {
-    if (this.occupied && this.occupant) {
-      this.occupant.handleAction(callback);
+  handleAction(completionFn, itemSelectFn) {
+    if (this.occupied && this.occupant && !this.occupant.grabbed) {
+      itemSelectFn(this.occupant);
+      this.occupant.handleAction(completionFn);
     } else {
-      callback(ACTION_RESULTS.MISS);
+      completionFn(ACTION_RESULTS.MISS);
     }
   }
   update() {
