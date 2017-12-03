@@ -51,13 +51,18 @@ class Arm {
     if (target.signals.onStepComplete) {
       target.signals.onStepComplete.add(this.onStepCompleteHandler, this);
     }
-    this._tween = game.add.tween(this._points[1]).to({
+    const tweenOpts = {
       x: target.x,
       y: target.y
-    }, 250, Phaser.Easing.Linear.None, true);
+    }
+    this._tween = game.add.tween(this._points[1]).to(tweenOpts, 250, Phaser.Easing.Linear.None, true);
     this._tween.onComplete.add(() => {
       this._tween = undefined;
     });
+    this._tween.onUpdateCallback(() => {
+      tweenOpts.x = target.x;
+      tweenOpts.y = target.y;
+    }, this);
     this._target = target;
   }
   onStepCompleteHandler(target) {
