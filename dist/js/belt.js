@@ -1,4 +1,4 @@
-var BELTSPEED = parseInt(ENV.BELTSPEED) || 50;
+var BELTSPEED = parseInt(ENV.BELTSPEED) || 150;
 class Belt extends GameObject {
   // Use -1 for left and 1 for right
   get direction() {

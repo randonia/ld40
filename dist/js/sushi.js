@@ -1,7 +1,7 @@
 class Sushi extends FoodItem {
   constructor() {
     super();
-    this._sprite = game.add.sprite(this.x, this.y, 'sushi', 0);
+    this._sprite = game.add.sprite(-150, -150, 'sushi', 0);
     this._sprite.anchor.x = 0.5;
     this._steps = this.generateSteps();
     this._step = 0;
