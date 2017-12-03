@@ -18,6 +18,7 @@ class Player extends GameObject {
     this.initialize();
     this._level = 0; // leveling - see level fn
     this._combo = 0;
+    this._score = 0;
   }
   initialize() {
     // Set up key signals
@@ -25,6 +26,7 @@ class Player extends GameObject {
       onArmKeyPress: new Phaser.Signal(),
       onLevelChange: new Phaser.Signal(),
       onComboChange: new Phaser.Signal(),
+      onScoreChange: new Phaser.Signal(),
       keys: {}
     }
     for (var keyRowIdx = 0; keyRowIdx < KEYS.length; keyRowIdx++) {
@@ -124,6 +126,7 @@ class Player extends GameObject {
   onItemComplete(item) {
     console.log('The player reporting the item is complete:', item);
     this.addCombo();
+    this.addScore();
     // see what level you're on via combo
     this.checkLevel();
   }
@@ -135,6 +138,14 @@ class Player extends GameObject {
     } = payload;
 
     this._arms[freeArmIdx].setTarget(item);
+  }
+  addScore() {
+    const oldScore = this._score;
+    this._score += 1;
+    this._signals.onScoreChange.dispatch({
+      oldScore,
+      score: this._score,
+    });
   }
   addCombo() {
     const oldCombo = this._combo;

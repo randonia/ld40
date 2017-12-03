@@ -1,6 +1,8 @@
 var gameObjects = [];
 var player;
 var ui;
+var belt1;
+var SPAWNRATE = ENV.SPAWNRATE || 5000; // once every 5 seconds or the ENV
 /**
  * Default state
  **/
@@ -20,7 +22,7 @@ class GameState {
     player.y = game.camera.bounds.bottom;
     gameObjects.push(player);
 
-    const belt1 = new Belt({
+    belt1 = new Belt({
       direction: 1,
       tier: 0,
     });
@@ -47,16 +49,24 @@ class GameState {
       belt.connectSignals(player.signals);
       player.connectSignals(belt.signals);
     });
-
+    setTimeout(() => {
+      this.spawn();
+    }, 500);
+  }
+  spawn() {
     const sushi1 = new Sushi();
     gameObjects.push(sushi1);
     belt1.addItem(sushi1);
+    this._lastSpawn = Date.now();
   }
   update() {
     for (var i = 0; i < gameObjects.length; i++) {
       gameObjects[i].update(game.time.physicsElapsed);
     }
     ui.update();
+    if (this._lastSpawn + SPAWNRATE < Date.now()) {
+      this.spawn();
+    }
   }
   render() {
     for (var i = 0; i < gameObjects.length; i++) {

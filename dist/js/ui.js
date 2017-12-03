@@ -19,12 +19,13 @@ class UIManager {
     game.world.bringToTop(this._group);
   }
   onPlayerLevelChange(delta) {
-    console.log('UI reporting level change', delta);
     this._levelUI.text = `Level: ${delta.level}`;
   }
   onPlayerComboChange(delta) {
-    console.log('UI reporting combo change', delta);
     this._comboUI.text = `Combo: ${delta.combo}`;
+  }
+  onPlayerScoreChange(delta) {
+    this._scoreUI.text = `Dishes: ${delta.score}`;
   }
   tryHook(hookId) {
     switch (hookId) {
@@ -34,6 +35,7 @@ class UIManager {
         }
         player.signals.onLevelChange.add(this.onPlayerLevelChange, this);
         player.signals.onComboChange.add(this.onPlayerComboChange, this);
+        player.signals.onScoreChange.add(this.onPlayerScoreChange, this);
         this._hooks.player = player;
         this._comboUI = game.add.text(game.world.width, game.world.height, '', {
           font: '24px Permanent Marker',
@@ -47,9 +49,17 @@ class UIManager {
         }, this._group);
         this._levelUI.anchor.set(0, 1);
 
+        this._scoreUI = game.add.text(0, 0, '', {
+          font: '24px Permanent Marker',
+          fill: '#ffffff',
+        }, this._group);
+        this._scoreUI.anchor.set(0, 0);
+
+
         setTimeout(() => {
           this._comboUI.text = 'Combo: 0';
           this._levelUI.text = 'Level: 0';
+          this._scoreUI.text = 'Dishes: 0';
         }, 250);
 
         break;
