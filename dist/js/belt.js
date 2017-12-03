@@ -77,7 +77,7 @@ class Belt extends GameObject {
       if (!itemData.new && offTheBelt) {
         // This item is off the conveyor!
         console.log('ITEM OFF CONVEYOR:', this, itemData);
-        this.removeItem(itemData.item);
+        this.moveItemNext(itemData.item);
       }
       if (itemData.new) {
         itemData.new = false;
@@ -164,6 +164,14 @@ class Belt extends GameObject {
     itemData.item.x = (this._direction === 1) ? this.sprite.left + itemData.delta : this.sprite.right + itemData.delta;
     itemData.item.y = this.sprite.bottom - itemData.item.sprite.height;
   }
+  moveItemNext(item) {
+    this.removeItem(item);
+    if (this._nextBelt) {
+      this._nextBelt.addItem(item);
+    } else {
+      console.log('The item has nowhere to go!');
+    }
+  }
   removeItem(item) {
     this.disconnectSignals(item.signals);
     let index = NaN;
@@ -177,16 +185,12 @@ class Belt extends GameObject {
     } else {
       console.log('Attempted to remove an item that is not in the list', this, item);
     }
-    if (this._nextBelt) {
-      this._nextBelt.addItem(item);
-    } else {
-      console.log('The item has nowhere to go!');
-    }
   }
   onItemComplete(item) {
     console.warn('Item has been completed:', item);
     // Do some cleanup
     this.disconnectSignals(item.signals);
+    this.removeItem(item);
     // Execute the item's completion
     item.doComplete();
     // Score it?
