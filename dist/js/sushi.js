@@ -79,7 +79,7 @@ class Sushi extends FoodItem {
     this._tween = game.add.tween(this).to({
       _x: Math.random() * game.world.width,
       _y: -200,
-    }, 1500, Phaser.Easing.Cubic.Out, true);
+    }, 500, Phaser.Easing.Linear.None, true);
     this._tween.onComplete.add(() => {
       this.destroy();
     }, this);
