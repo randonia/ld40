@@ -1,8 +1,12 @@
 class Sushi extends FoodItem {
   constructor() {
-    super();
-    this._sprite = game.add.sprite(-150, -150, 'sushi', 0);
+    super({
+      x: -150,
+      y: -150
+    });
+    this._sprite = game.add.sprite(this.x, this.y, 'sushi', 0);
     this._sprite.anchor.x = 0.5;
+    this._sprite.visible = false;
     this._steps = this.generateSteps();
     this._step = 0;
     this._signals = {
@@ -70,6 +74,7 @@ class Sushi extends FoodItem {
   }
   update(delta) {
     super.update();
+    this._sprite.visible = true;
     if (this._emitter) {
       this._emitter.x = this.x;
       this._emitter.y = this.sprite.bottom;

@@ -2,8 +2,8 @@ class FoodItem extends GameObject {
   get signals() {
     return this._signals;
   }
-  constructor() {
-    super();
+  constructor(opts = {}) {
+    super(opts);
     this._rounds = 0;
   }
   generateSteps() {

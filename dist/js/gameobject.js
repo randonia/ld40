@@ -14,8 +14,10 @@ class GameObject {
   set y(value) {
     this._y = value;
   }
-  constructor() {
-    this.x = this.y = 0;
+  constructor(opts = {}) {
+    // Force everything off screen initially
+    this.x = opts.x || 0;
+    this.y = opts.y || 0;
   }
   update(delta) {
     if (this._sprite) {
