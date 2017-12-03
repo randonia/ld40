@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title></title>
+  <title>たこ 任せ</title>
   <link rel="stylesheet" href="style.css" type="text/css"></link>
   <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
   <meta charset="utf-8" />
   <script src="js/thirdparty/sprintf.js" type="text/javascript"></script>
   <script src="js/thirdparty/phaser.js" type="text/javascript"></script>
   <script type="text/javascript">
+    console.info('たこ 任せ Ｔａｋｏ Ｍａｋａｓｅ');
     // Parse out all the debug parameters and use it to define ENV variables
     var ENV = window.location.search.substr(1).split('&').map(item => item.split('=')).reduce((acc, val) => {
       acc[val[0]] = val[1];
@@ -39,14 +40,28 @@
 </head>
 <body>
 <div class="header">
-  <h1></h1>
+  <h1>🐙 たこ 任せ Ｔａｋｏ Ｍａｋａｓｅ 🍣</h1>
   </div>
   <div id="game-container" class="game-container"></div>
   <div class="game-details">
-    <h1></h1>
-    <h2>Theme: </h2>
-    <a class="link" href="">Ludum Dare Page</a><br>
-    <a class="link" href="">GitHub</a>
+    <p>Theme: Ｔｈｅ ｍｏｒｅ ｙｏｕ ｈａｖｅ, ｔｈｅ ｗｏｒｓｅ ｉｔ ｉｓ</p>
+    <h2>How to Play</h2>
+    <p>Sushi will come by on three conveyor belts. You must prep, cut, and plate sushi as it comes by. Don't let the sushi get to the end.</p>
+    <h2>Controls</h2>
+    <ul>
+      <li><code>Q W E R</code> - Top Left Area</li>
+      <li><code>A S D F</code> - Middle Left Area</li>
+      <li><code>Z X C V</code> - Bottom Left Area</li>
+      <li><code>U I O P</code> - Top Right Area</li>
+      <li><code>J K L ;</code> - Middle Right Area</li>
+      <li><code>N M , .</code> - Bottom Right Area</li>
+      <li><code>[</code> - Volume down</li>
+      <li><code>]</code> - Volume up</li>
+    </ul>
+    <h2>Links</h2>
+    <a class="link" href="https://ldjam.com/events/ludum-dare/40/$59759">Ludum Dare Page</a><br>
+    <a class="link" href="https://twitter.com/zambini845">@Zambini845</a><br>
+    <a class="link" href="https://github.com/randonia/ld40">GitHub</a>
     <ul>
     </ul>
   </div>
