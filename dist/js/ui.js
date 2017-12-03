@@ -1,3 +1,7 @@
+const DEFAULT_TEXT_OPTS = {
+  font: '24px Permanent Marker',
+  fill: '#ffffff',
+};
 class UIManager {
   constructor() {
     this._hooks = {
@@ -44,22 +48,13 @@ class UIManager {
         player.signals.onComboChange.add(this.onPlayerComboChange, this);
         player.signals.onScoreChange.add(this.onPlayerScoreChange, this);
         this._hooks.player = player;
-        this._comboUI = game.add.text(game.world.width, game.world.height, '', {
-          font: '24px Permanent Marker',
-          fill: '#ffffff',
-        }, this._group);
+        this._comboUI = game.add.text(game.world.width, game.world.height, '', DEFAULT_TEXT_OPTS, this._group);
         this._comboUI.anchor.set(1, 1);
 
-        this._levelUI = game.add.text(0, game.world.height, '', {
-          font: '24px Permanent Marker',
-          fill: '#ffffff',
-        }, this._group);
+        this._levelUI = game.add.text(0, game.world.height, '', DEFAULT_TEXT_OPTS, this._group);
         this._levelUI.anchor.set(0, 1);
 
-        this._scoreUI = game.add.text(0, 0, '', {
-          font: '24px Permanent Marker',
-          fill: '#ffffff',
-        }, this._group);
+        this._scoreUI = game.add.text(0, 0, '', DEFAULT_TEXT_OPTS, this._group);
         this._scoreUI.anchor.set(0, 0);
 
 
@@ -88,10 +83,7 @@ class UIManager {
         }
 
         this._healthGroup = game.add.group();
-        this._healthText = game.add.text(game.world.width - 200, 0, '', {
-          font: '24px Permanent Marker',
-          fill: '#ffffff',
-        }, this._group);
+        this._healthText = game.add.text(game.world.width - 200, 0, '', DEFAULT_TEXT_OPTS, this._group);
         setTimeout(() => {
           this._healthText.text = 'Health:';
           this._healthGroup.align(3, -1, 32, 32);

@@ -19,6 +19,15 @@ class GameState {
     game.load.image('hp', 'assets/sprites/hp.png');
   }
   create() {
+    // Make sure all gameobjects are destroyed
+    let go;
+    while ((go = gameObjects.pop())) {
+      // Do cleanup on all gameobjects
+      if (go.sprite) {
+        go.destroy();
+      }
+    }
+
     HEALTH = 3; // let the player mess up thrice
     ui = new UIManager();
     player = new Player();
@@ -65,12 +74,20 @@ class GameState {
     this._lastSpawn = Date.now();
   }
   update() {
+    this.stateCheck();
     for (var i = 0; i < gameObjects.length; i++) {
       gameObjects[i].update(game.time.physicsElapsed);
     }
     ui.update();
     if (this._lastSpawn + SPAWNRATE < Date.now()) {
       this.spawn();
+    }
+  }
+  stateCheck() {
+    // Check if the state of the game is such that we should exit
+    if (HEALTH <= 0) {
+      console.log('State check reports player has lost');
+      game.state.start('credits');
     }
   }
   render() {

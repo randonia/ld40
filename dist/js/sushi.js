@@ -92,12 +92,14 @@ class Sushi extends FoodItem {
   destroy() {
     delete this._tween;
     this._sprite.destroy();
-    this._emitter.on = false;
-    setTimeout(() => {
-        this._emitter.destroy();
-        delete this._emitter;
-      },
-      1000);
+    if (this._emitter) {
+      this._emitter.on = false;
+      setTimeout(() => {
+          this._emitter.destroy();
+          delete this._emitter;
+        },
+        1000);
+    }
     let step;
     while ((step = this._steps.pop())) {
       step.destroy();

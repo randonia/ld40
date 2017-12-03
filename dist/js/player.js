@@ -6,6 +6,9 @@ class Player extends GameObject {
   get combo() {
     return this._combo;
   }
+  get score() {
+    return this._score;
+  }
   get signals() {
     return this._signals;
   }

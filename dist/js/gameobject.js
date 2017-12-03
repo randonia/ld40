@@ -23,4 +23,9 @@ class GameObject {
     }
   }
   render() {}
+  destroy() {
+    if (this._sprite) {
+      this._sprite.destroy();
+    }
+  }
 }
