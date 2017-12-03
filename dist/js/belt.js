@@ -107,6 +107,8 @@ class Belt extends GameObject {
         zone.occupied = zone.rect.intersects(itemData.item.sprite.getBounds());
         if (zone.occupied) {
           zone.occupant = itemData.item;
+          // make sure to break out and only use the first item
+          break;
         } else {
           zone.occupant = undefined;
         }
