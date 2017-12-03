@@ -78,11 +78,30 @@ class Sushi extends FoodItem {
     this._emitter = emitter;
     this._tween = game.add.tween(this).to({
       _x: Math.random() * game.world.width,
-      _y: -200
-    }, 3500, Phaser.Easing.Cubic.Out, true);
+      _y: -200,
+    }, 1500, Phaser.Easing.Cubic.Out, true);
+    this._tween.onComplete.add(() => {
+      this.destroy();
+    }, this);
+  }
+  destroy() {
+    delete this._tween;
+    this._sprite.destroy();
+    this._emitter.on = false;
+    setTimeout(() => {
+        this._emitter.destroy();
+        delete this._emitter;
+      },
+      1000);
+    let step;
+    while ((step = this._steps.pop())) {
+      step.destroy();
+    }
   }
   handleAction(callback) {
-    this._steps[this._step].doAction(callback);
+    if (this._step < this._steps.length) {
+      this._steps[this._step].doAction(callback);
+    }
   }
   nextStep() {
     this._step++;

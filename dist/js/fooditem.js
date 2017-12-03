@@ -16,6 +16,9 @@ class FoodItem extends GameObject {
   doComplete() {
     throw new Error('Not Implemented');
   }
+  destroy() {
+    throw new Error('Not Implemented');
+  }
 }
 
 // Helper class, kind of like an internal state machine
@@ -44,5 +47,10 @@ class Step {
       this._complete = true;
       this._completeFn();
     });
+  }
+  destroy() {
+    delete this._actionFn;
+    delete this._completeFn;
+    delete this._scope;
   }
 }
