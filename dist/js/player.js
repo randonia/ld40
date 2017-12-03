@@ -178,6 +178,45 @@ class Player extends GameObject {
       oldCombo,
       combo: this._combo,
     });
+    this.checkLevel();
+    this.damageEffect('combo');
+  }
+  // Do a fancy red tween
+  damageEffect(type = 'combo') {
+    if (this._damageTween) {
+      this._damageTween.stop();
+      delete this._damageTween;
+    }
+    let colorData;
+    switch (type) {
+      case 'combo':
+        colorData = {
+          r: 255,
+          g: 0,
+          b: 0,
+        };
+        break;
+      case 'armsNotReady':
+        colorData = {
+          r: 127,
+          g: 127,
+          b: 127,
+        };
+        break;
+      default:
+        console.warn('Passed in unknown damageEffect', type);
+        return;
+    }
+    const damageTween = game.add.tween(colorData).to({
+      r: 255,
+      g: 255,
+      b: 255,
+    }, 50, Phaser.Easing.Linear.None, true);
+    console.log('TAKING DAMAGE:', damageTween);
+    damageTween.onUpdateCallback(() => {
+      this.sprite.tint = Phaser.Color.createColor(colorData.r, colorData.g, colorData.b).color;
+    });
+    this._damageTween = damageTween;
   }
   /**
    * level 0 is combo 0-3
@@ -260,7 +299,7 @@ class Player extends GameObject {
         freeArmIdx
       }));
     } else {
-      console.log('No free arms! Oh noes');
+      this.damageEffect('armsNotReady');
     }
   }
 }
