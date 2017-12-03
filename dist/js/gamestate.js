@@ -35,6 +35,9 @@ class GameState {
       bgm = game.add.audio('bgm');
       bgm.loop = true;
       bgm.play();
+      if (ENV.mute) {
+        bgm.volume = 0;
+      }
     }
     const volKeyDown = game.input.keyboard.addKey(Phaser.KeyCode.OPEN_BRACKET);
     volKeyDown.onDown.add(this.bgmDown, this);
