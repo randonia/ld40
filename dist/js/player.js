@@ -12,10 +12,11 @@ class Player extends GameObject {
   get signals() {
     return this._signals;
   }
-  constructor() {
+  constructor(opts) {
     super();
+    this._x = opts.x;
+    this._y = opts.y;
     this._sprite = game.add.sprite(this.x, this.y, 'player');
-    this._sprite.scale.set(2, 2);
     this._sprite.anchor.x = 0.5;
     this._sprite.anchor.y = 1;
     this.initialize();
@@ -49,22 +50,24 @@ class Player extends GameObject {
     }
     // Make all 8 arms upfront
     const armPositions = [
-      new Phaser.Point(300, game.world.height),
-      new Phaser.Point(400, game.world.height),
-      new Phaser.Point(200, game.world.height),
-      new Phaser.Point(500, game.world.height),
-      new Phaser.Point(100, game.world.height),
-      new Phaser.Point(600, game.world.height),
-      new Phaser.Point(0, game.world.height),
-      new Phaser.Point(700, game.world.height),
+      new Phaser.Point(266, 351), // 3
+      new Phaser.Point(526, 355), // 4
+      new Phaser.Point(183, 355), // 2
+      new Phaser.Point(619, 349), // 5
+      new Phaser.Point(98, 346), // 1
+      new Phaser.Point(681, 348), // 6
+      new Phaser.Point(53, 356), // 0
+      new Phaser.Point(749, 344), // 7
     ];
     this._arms = [];
+    const offsetX = 0;
+    const offsetY = this._sprite.top;
     for (var i = 0; i < 8; i++) {
       this._arms.push(new Arm({
-        startX: armPositions[i].x,
-        startY: armPositions[i].y,
-        targetX: armPositions[i].x,
-        targetY: armPositions[i].y - 150,
+        startX: offsetX + armPositions[i].x,
+        startY: offsetY + armPositions[i].y,
+        targetX: offsetX + armPositions[i].x,
+        targetY: offsetY + armPositions[i].y - 200,
         active: false,
       }));
     }

@@ -30,9 +30,10 @@ class GameState {
 
     HEALTH = 3; // let the player mess up thrice
     ui = new UIManager();
-    player = new Player();
-    player.x = game.camera.bounds.centerX;
-    player.y = game.camera.bounds.bottom;
+    player = new Player({
+      x: game.camera.bounds.centerX,
+      y: game.camera.bounds.bottom
+    });
     gameObjects.push(player);
 
     belt1 = new Belt({
