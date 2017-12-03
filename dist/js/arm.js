@@ -44,6 +44,8 @@ class Arm {
     this._points[1].x = this._points[0].x;
     this._points[1].y = this._points[0].y;
 
+    this._knife.position.x = this._points[0].x;
+    this._knife.position.y = this._points[0].y;
     this._knife.visible = true;
 
     if (target.signals.onStepComplete) {

@@ -13,6 +13,9 @@ class Belt extends GameObject {
   set nextBelt(belt) {
     this._nextBelt = belt;
   }
+  get nextBelt() {
+    return this._nextBelt;
+  }
   get tier() {
     return this._tier;
   }
@@ -34,6 +37,7 @@ class Belt extends GameObject {
       onInputFailure: new Phaser.Signal(),
       onItemComplete: new Phaser.Signal(),
       onItemSelected: new Phaser.Signal(),
+      onItemLeave: new Phaser.Signal(),
     };
   }
   generateZones() {
@@ -173,6 +177,16 @@ class Belt extends GameObject {
       this._nextBelt.addItem(item);
     } else {
       console.log('The item has nowhere to go!');
+      const oldHealth = HEALTH;
+      HEALTH--;
+      if (HEALTH <= 0) {
+        // Player loses
+        console.log('Player loses');
+      }
+      this._signals.onItemLeave.dispatch({
+        oldHealth,
+        health: HEALTH,
+      });
     }
   }
   removeItem(item) {

@@ -3,6 +3,7 @@ var player;
 var ui;
 var belt1;
 var SPAWNRATE = ENV.SPAWNRATE || 5000; // once every 5 seconds or the ENV
+var HEALTH;
 /**
  * Default state
  **/
@@ -15,8 +16,10 @@ class GameState {
     game.load.spritesheet('effects', 'assets/sprites/effects.png', 16, 16, 4);
     game.load.spritesheet('knife', 'assets/sprites/knife.png', 32, 32, 2);
     game.load.image('noodle', 'assets/sprites/noodle.png');
+    game.load.image('hp', 'assets/sprites/hp.png');
   }
   create() {
+    HEALTH = 3; // let the player mess up thrice
     ui = new UIManager();
     player = new Player();
     player.x = game.camera.bounds.centerX;
@@ -27,6 +30,7 @@ class GameState {
       direction: 1,
       tier: 0,
     });
+    belt1.y = 40;
     gameObjects.push(belt1);
 
     const belt2 = new Belt({

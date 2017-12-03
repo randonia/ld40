@@ -2,6 +2,7 @@ class UIManager {
   constructor() {
     this._hooks = {
       player: undefined,
+      belt3: undefined,
     };
     this._group = game.add.group();
   }
@@ -26,6 +27,12 @@ class UIManager {
   }
   onPlayerScoreChange(delta) {
     this._scoreUI.text = `Dishes: ${delta.score}`;
+  }
+  onLastBeltItemLeave(delta) {
+    // Set visibility based on health
+    for (var cIdx = 0; cIdx < this._healthGroup.children.length; cIdx++) {
+      this._healthGroup.children[cIdx].visible = cIdx < delta.health;
+    }
   }
   tryHook(hookId) {
     switch (hookId) {
@@ -62,6 +69,47 @@ class UIManager {
           this._scoreUI.text = 'Dishes: 0';
         }, 250);
 
+        break;
+      case 'belt3':
+        // belt3 is the belt that is referenced at the end of the reference chain from belt1
+        if (!belt1) {
+          return;
+        }
+        let lastBelt;
+        let currBelt = belt1;
+        // Follow the chain of next belts
+        while (currBelt.nextBelt) {
+          currBelt = currBelt.nextBelt
+        }
+        if (currBelt === belt1) {
+          return;
+        } else {
+          this._hooks.belt3 = currBelt;
+        }
+
+        this._healthGroup = game.add.group();
+        this._healthText = game.add.text(game.world.width - 200, 0, '', {
+          font: '24px Permanent Marker',
+          fill: '#ffffff',
+        }, this._group);
+        setTimeout(() => {
+          this._healthText.text = 'Health:';
+          this._healthGroup.align(3, -1, 32, 32);
+          this._healthGroup.visible = true;
+          this._healthGroup.x = this._healthText.getBounds().right;
+        }, 250);
+
+        for (var idx = 0; idx < 3; idx++) {
+          const healthSprite = game.add.sprite(0, 0, 'hp');
+          this._healthGroup.add(healthSprite);
+        }
+        this._healthGroup.visible = false;
+        this._healthGroup.x = game.world.width;
+        this._healthGroup.y = 0;
+        this._group.add(this._healthGroup);
+
+        // Set up the last belt watcher
+        currBelt.signals.onItemLeave.add(this.onLastBeltItemLeave, this);
         break;
       default:
         console.warn('Invalid hook id passed:', hookId);
