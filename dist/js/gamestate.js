@@ -4,6 +4,8 @@ var ui;
 var belt1;
 var SPAWNRATE = ENV.SPAWNRATE || 5000; // once every 5 seconds or the ENV
 var HEALTH;
+var bgm;
+
 /**
  * Default state
  **/
@@ -17,6 +19,7 @@ class GameState {
     game.load.spritesheet('knife', 'assets/sprites/knife.png', 32, 32, 2);
     game.load.image('noodle', 'assets/sprites/noodle.png');
     game.load.image('hp', 'assets/sprites/hp.png');
+    game.load.audio('bgm', 'assets/audio/bgm.mp3');
   }
   create() {
     // Make sure all gameobjects are destroyed
@@ -27,6 +30,16 @@ class GameState {
         go.destroy();
       }
     }
+
+    if (!bgm) {
+      bgm = game.add.audio('bgm');
+      bgm.loop = true;
+      bgm.play();
+    }
+    const volKeyDown = game.input.keyboard.addKey(Phaser.KeyCode.OPEN_BRACKET);
+    volKeyDown.onDown.add(this.bgmDown, this);
+    const volKeyUp = game.input.keyboard.addKey(Phaser.KeyCode.CLOSED_BRACKET);
+    volKeyUp.onDown.add(this.bgmUp, this);
 
     HEALTH = 3; // let the player mess up thrice
     ui = new UIManager();
@@ -67,6 +80,20 @@ class GameState {
     setTimeout(() => {
       this.spawn();
     }, 500);
+  }
+  bgmDown() {
+    if (bgm) {
+      const newVol = Math.max(0, bgm.volume - 0.1);
+      console.log(`Volume down ${bgm.volume} => ${newVol}`);
+      bgm.volume = newVol;
+    }
+  }
+  bgmUp() {
+    if (bgm) {
+      const newVol = Math.min(1, bgm.volume + 0.1);
+      console.log(`Volume down ${bgm.volume} => ${newVol}`);
+      bgm.volume = newVol;
+    }
   }
   spawn() {
     const sushi1 = new Sushi();
