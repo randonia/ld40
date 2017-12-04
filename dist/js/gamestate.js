@@ -82,7 +82,8 @@ class GameState {
     });
     setTimeout(() => {
       this.spawn();
-    }, 500);
+    }, 1500);
+    SPAWNRATE = ENV.SPAWNRATE || 5000;
   }
   bgmDown() {
     if (bgm) {

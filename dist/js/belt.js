@@ -5,10 +5,10 @@ class Belt extends GameObject {
     return this._direction;
   }
   get speed() {
-    return this._speed;
+    return BELTSPEED;
   }
   set speed(value) {
-    this._speed = value;
+    BELTSPEED = value;
   }
   set nextBelt(belt) {
     this._nextBelt = belt;
@@ -25,7 +25,6 @@ class Belt extends GameObject {
   constructor(opts = {}) {
     super();
     this._items = [];
-    this._speed = BELTSPEED; // px/second
     this._tier = opts.tier;
     this._direction = opts.direction || 0;
     this._nextBelt = opts.nextBelt || undefined;

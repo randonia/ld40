@@ -12,6 +12,9 @@ class Player extends GameObject {
   get signals() {
     return this._signals;
   }
+  get highestCombo() {
+    return this._highestCombo;
+  }
   constructor(opts) {
     super();
     this._x = opts.x;
@@ -23,6 +26,7 @@ class Player extends GameObject {
     this._level = 0; // leveling - see level fn
     this._combo = 0;
     this._score = 0;
+    this._highestCombo = 0;
   }
   initialize() {
     // Set up key signals
@@ -170,6 +174,8 @@ class Player extends GameObject {
       oldCombo,
       combo: this._combo,
     });
+    this._highestCombo = Math.max(this._highestCombo, this._combo);
+    this.setSpawnrateAndBeltSpeed();
   }
   loseCombo() {
     const oldCombo = this._combo;
@@ -180,6 +186,24 @@ class Player extends GameObject {
     });
     this.checkLevel();
     this.damageEffect('combo');
+    this.setSpawnrateAndBeltSpeed();
+  }
+  setSpawnrateAndBeltSpeed() {
+    // SET THE SPAWN RATE AS A FUNCTION OF COMBO
+    // Spawnrate: 5 - 0.25x
+    // Minimum rate of 1000, max of 5000
+    const magicNumber = 5 - 0.25 * this._combo;
+    const newRate = Math.min(5000, Math.max(1000, magicNumber * 1000));
+    console.log(`Changing the spawnrate from ${SPAWNRATE} to ${newRate} [Magic number: ${magicNumber}]`);
+    SPAWNRATE = newRate;
+
+    // Beltspeed
+    // 0.0125 * x^2
+    const magicBeltNumber = 0.0125 * (Math.pow(this._combo, 2));
+    const spd = (ENV.BELTSPEED || 150);
+    const newBeltSpeed = spd + (magicBeltNumber * spd);
+    console.log(`Changing the belt speed from ${BELTSPEED} to ${newBeltSpeed} [Magic number: ${magicBeltNumber}]`);
+    BELTSPEED = newBeltSpeed;
   }
   // Do a fancy red tween
   damageEffect(type = 'combo') {
@@ -253,6 +277,7 @@ class Player extends GameObject {
         level: this.level,
       });
     }
+
     // Set up the arms based on your level
     const armIdx = Math.min(this._level, 3); // safeguard against going too hard
     for (var i = 0; i < this._arms.length; i++) {

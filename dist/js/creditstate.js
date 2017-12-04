@@ -6,7 +6,7 @@ class CreditState {
     this._group = game.add.group();
 
     // create the user feedback text
-    const endTextValue = `You were able to serve ${player.score} meals before becoming overwhelmed by the demand for your skill`;
+    const endTextValue = `You were able to serve ${player.score} meals before becoming overwhelmed by the demand for your skill. Your highest combo was ${player.highestCombo}`;
     const endText = game.add.text(game.world.centerX, game.world.centerY, endTextValue, {
       align: 'center',
       font: '30px Permanent Marker',
