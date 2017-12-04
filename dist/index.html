@@ -5,8 +5,6 @@
   <link rel="stylesheet" href="style.css" type="text/css"></link>
   <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
   <meta charset="utf-8" />
-  <script src="js/thirdparty/sprintf.js" type="text/javascript"></script>
-  <script src="js/thirdparty/phaser.js" type="text/javascript"></script>
   <script type="text/javascript">
     console.info('たこ 任せ Ｔａｋｏ Ｍａｋａｓｅ');
     // Parse out all the debug parameters and use it to define ENV variables
@@ -14,29 +12,21 @@
       acc[val[0]] = val[1];
       return acc
     }, {});
-
-    // A slightly more civilized include
-    const scripts = [
-      'gamestate',
-      'creditstate',
-      'gameobject',
-      'zone',
-      'belt',
-      'fooditem',
-      'sushi',
-      'keys',
-      'arm',
-      'player',
-      'ui',
-      'game',
-    ];
-
-    for (var i = 0; i < scripts.length; i++) {
-      const script = document.createElement('script');
-      script.src = `js/${scripts[i]}.js`;
-      document.head.appendChild(script);
-    }
   </script>
+  <script src="js/thirdparty/sprintf.js" type="text/javascript"></script>
+  <script src="js/thirdparty/phaser.js" type="text/javascript"></script>
+  <script src="js/gamestate.js" type="text/javascript"></script>
+  <script src="js/creditstate.js" type="text/javascript"></script>
+  <script src="js/gameobject.js" type="text/javascript"></script>
+  <script src="js/zone.js" type="text/javascript"></script>
+  <script src="js/belt.js" type="text/javascript"></script>
+  <script src="js/fooditem.js" type="text/javascript"></script>
+  <script src="js/sushi.js" type="text/javascript"></script>
+  <script src="js/keys.js" type="text/javascript"></script>
+  <script src="js/arm.js" type="text/javascript"></script>
+  <script src="js/player.js" type="text/javascript"></script>
+  <script src="js/ui.js" type="text/javascript"></script>
+  <script src="js/game.js" type="text/javascript"></script>
 </head>
 <body>
 <div class="header">
