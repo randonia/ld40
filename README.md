@@ -3,7 +3,7 @@ Ludum Dare 40 Compo Entry
 
 ![][21]
 
-[Ludum Dare Page][0]- [@Zambini845][1] - [GitHub][2]
+[Ludum Dare Page][0]- [@Zambini845][1] - [GitHub][2] - [itch.io][3]
 
 ## Theme ##
 Ｔｈｅ ｍｏｒｅ ｙｏｕ ｈａｖｅ, ｔｈｅ ｗｏｒｓｅ ｉｔ ｉｓ
@@ -36,9 +36,10 @@ You'll need all your tentacles for this one, but don't worry it starts out easy.
 * [BoscaCeoil][11] Audio
 * [Pyxel Editor][12] Sprites
 
-[0]: https://ldjam.com/events/ludum-dare/40/$59759
+[0]: https://ldjam.com/events/ludum-dare/40/takomakase
 [1]: https://twitter.com/zambini845
 [2]: https://github.com/randonia/ld40
+[3]: https://zambini.itch.io/takomakase
 
 [10]: https://phaser.io
 [11]: http://boscaceoil.net
