@@ -7,6 +7,8 @@ class UIManager {
     this._hooks = {
       player: undefined,
       belt3: undefined,
+      belt2: undefined,
+      belt1: undefined,
     };
     this._group = game.add.group();
   }
@@ -102,6 +104,41 @@ class UIManager {
 
         // Set up the last belt watcher
         currBelt.signals.onItemLeave.add(this.onLastBeltItemLeave, this);
+
+        // Add an X for the ending to indicate bad
+        const belt3XText = game.add.text(currBelt.sprite.right - 5, currBelt.sprite.centerY - 5, 'X', DEFAULT_TEXT_OPTS, this._group);
+        belt3XText.anchor.x = 1;
+        this._belt3XText = belt3XText;
+        break;
+      case 'belt2':
+        // belt2 is the second belt that is referenced
+        if (!belt1) {
+          return;
+        }
+        const belt2 = belt1.nextBelt;
+        if (!belt2) {
+          return;
+        }
+
+        this._hooks.belt2 = belt2;
+        // Add down arrow at the end of belt 2
+        const belt2DownArrow = game.add.text(belt2.sprite.left + 30, belt2.sprite.bottom, '->', DEFAULT_TEXT_OPTS, this._group);
+        belt2DownArrow.anchor.x = 0;
+        belt2DownArrow.rotation = Math.PI / 2;
+        this._belt2DownArrow = belt2DownArrow;
+      case 'belt1':
+        if (!belt1) {
+          return
+        }
+
+        this._hooks.belt1 = belt1;
+        const belt1DownArrow = game.add.text(belt1.sprite.right + 10, belt1.sprite.bottom + 35, '->', DEFAULT_TEXT_OPTS, this._group);
+        belt1DownArrow.rotation = Math.PI / 2;
+        belt1DownArrow.anchor.x = 1;
+        this._belt1DownArrow = belt1DownArrow;
+
+        const belt1ForwardArrow = game.add.text(belt1.sprite.left, belt1.sprite.centerY - 5, '->', DEFAULT_TEXT_OPTS, this._group);
+        this.belt1ForwardArrow = belt1ForwardArrow;
         break;
       default:
         console.warn('Invalid hook id passed:', hookId);

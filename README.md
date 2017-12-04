@@ -42,4 +42,4 @@ You'll need all your tentacles for this one, but don't worry it starts out easy.
 [11]: http://boscaceoil.net
 [12]: http://pyxeledit.com
 
-[20]: https://gfycat.com/ifr/FoolishInbornCuttlefish
+[20]: https://raw.githubusercontent.com/randonia/ld40/master/screenshots/howto_01.gif
