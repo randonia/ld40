@@ -1,6 +1,8 @@
 # 🐙 たこ 任せ Ｔａｋｏ Ｍａｋａｓｅ 🍣 #
 Ludum Dare 40 Compo Entry
 
+![][21]
+
 [Ludum Dare Page][0]- [@Zambini845][1] - [GitHub][2]
 
 ## Theme ##
@@ -43,3 +45,4 @@ You'll need all your tentacles for this one, but don't worry it starts out easy.
 [12]: http://pyxeledit.com
 
 [20]: https://raw.githubusercontent.com/randonia/ld40/master/screenshots/howto_01.gif
+[21]: https://raw.githubusercontent.com/randonia/ld40/master/screenshots/cover.png
